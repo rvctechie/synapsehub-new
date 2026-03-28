@@ -1,7 +1,0 @@
-{
-  "name": "SynapseHub CRM",
-  "description": "The ultimate Managed Operations Service for marketing and sales. We handle the technical heavy lifting so you can scale.",
-  "requestFramePermissions": [
-    "microphone"
-  ]
-}
