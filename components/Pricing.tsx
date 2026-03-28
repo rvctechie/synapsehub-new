@@ -1,57 +1,51 @@
 import React, { useState } from 'react';
 import { Check, Zap } from 'lucide-react';
 
-export default function Pricing() {
+interface PricingProps {
+  onOpenChat?: () => void;
+}
+
+export default function Pricing({ onOpenChat }: PricingProps) {
   const [annual, setAnnual] = useState(false);
 
   const tiers = [
     {
-      name: "Business Foundation Pack",
+      name: "Managed Lead Recovery",
       price: annual ? 230 : 297,
       setupFee: 997,
-      pitch: "Establish a professional digital presence and never miss a lead again with our managed communication hub. We handle the technical setup and maintenance of your core business systems so you can focus on closing deals.",
+      pitch: "We build and manage the infrastructure that captures every lead and recovers every missed call instantly.",
       deliverables: [
-        'Managed Unified Inbox (SMS, Email, Social)',
-        'Automated Appointment Booking Systems',
-        'Managed Missed Call Text-Back Automation',
-        'Strategic Funnel Design & Maintenance',
-        'Managed Payments & Invoicing Integration'
+        'Managed Unified Communications',
+        'Automated Lead Recovery',
+        'Strategic Lead Capture Architecture'
       ],
       roi: "Recapture lost revenue from missed calls and manual follow-ups while saving 10+ hours of admin work weekly.",
       highlight: false,
       iconColor: "text-slate-600 group-hover:text-yellow-400"
     },
     {
-      name: "Scale & Automation Suite",
+      name: "Strategic Efficiency Suite",
       price: annual ? 390 : 497,
       setupFee: 1997,
-      pitch: "Accelerate your growth with advanced AI-driven workflows and team-wide operational efficiency. We architect and manage complex automations that allow your business to scale without increasing your headcount.",
+      pitch: "We replace manual administrative labor with AI-driven appointment architecture and automated staff training systems.",
       deliverables: [
-        'Advanced AI Workflow Management',
-        'Managed Affiliate & Referral Systems',
-        'Membership & Course Hosting Management',
-        'Custom API & Webhook Integrations',
-        'Unlimited Team Onboarding & Support'
+        'AI Appointment Concierge',
+        'Managed SOP & Training Hub',
+        'Strategic Referral Management'
       ],
       roi: "Drastically reduce operational overhead by replacing manual labor with high-performance automated systems.",
       highlight: true,
       iconColor: "text-blue-400"
     },
     {
-      name: "Enterprise Operations Partnership",
+      name: "Elite Enterprise Partnership",
       price: annual ? 690 : 897,
       setupFee: 4997,
-      pitch: "Your dedicated, outsourced technology and operations department for total business dominance. We provide high-level strategic partnership and full-scale technical execution to ensure your brand stays at the cutting edge.",
+      pitch: "We build your proprietary branded ecosystem, migrate your legacy data, and provide executive intelligence to scale your brand.",
       deliverables: [
-        'White-Label Brand Implementation',
-        'Managed SaaS Reseller Operations',
-        'Custom Executive Reporting Dashboards',
-        'Managed Infrastructure & Re-billing',
-        'Dedicated Operations Success Manager',
-        'Custom AI Model Training & Fine-tuning',
-        'Full A2P 10DLC Legal Compliance Management',
-        'White-Glove Data Migration & System Sunsetting',
-        'Omni-channel Communication Architecture'
+        'Proprietary Branded Ecosystem',
+        'White-Glove Data Migration',
+        'Executive ROI Intelligence'
       ],
       roi: "Transform your business into a high-valuation technology asset with a fully managed, scalable infrastructure.",
       highlight: false,
@@ -119,7 +113,9 @@ export default function Pricing() {
                 </span>
               </div>
 
-              <button className={`w-full py-3 font-bold rounded-lg transition-all mb-8 shadow-lg ${
+              <button 
+                onClick={onOpenChat}
+                className={`w-full py-3 font-bold rounded-lg transition-all mb-8 shadow-lg ${
                 tier.highlight 
                 ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-blue-500/25' 
                 : 'border border-slate-700 text-white hover:bg-slate-800'

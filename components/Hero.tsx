@@ -3,10 +3,11 @@ import { ChevronRight } from 'lucide-react';
 
 interface HeroProps {
   onOpenChat?: () => void;
-  onOpenAutomatePage?: () => void;
+  onOpenRoadmap?: () => void;
+  onOpenVoice?: () => void;
 }
 
-export default function Hero({ onOpenChat, onOpenAutomatePage }: HeroProps) {
+export default function Hero({ onOpenChat, onOpenRoadmap, onOpenVoice }: HeroProps) {
   return (
     <section className="relative pt-40 pb-32 lg:pt-48 lg:pb-40 overflow-hidden bg-slate-950">
       {/* Sophisticated Background */}
@@ -43,7 +44,7 @@ export default function Hero({ onOpenChat, onOpenAutomatePage }: HeroProps) {
           
           {/* Enhanced Talk Now Widget - Centered & Larger */}
           <button 
-            onClick={onOpenChat}
+            onClick={onOpenVoice}
             className="relative pl-3 pr-10 py-3 bg-slate-900/80 backdrop-blur-md text-white border border-slate-700 hover:border-blue-500/50 rounded-2xl font-medium transition-all duration-300 flex items-center gap-5 group hover:bg-slate-800 hover:shadow-[0_0_40px_rgba(59,130,246,0.2)] hover:-translate-y-1"
           >
             <div className="relative">
@@ -56,16 +57,16 @@ export default function Hero({ onOpenChat, onOpenAutomatePage }: HeroProps) {
             </div>
             <div className="text-left flex flex-col justify-center">
                 <span className="text-xs text-emerald-400 font-bold uppercase tracking-widest leading-none mb-2">Managed Operations</span>
-                <span className="leading-none text-2xl group-hover:text-blue-200 transition-colors font-bold tracking-tight">Connect with your Ops Lead</span>
+                <span className="leading-none text-2xl group-hover:text-blue-200 transition-colors font-bold tracking-tight">AI Voice Support</span>
                 <span className="text-slate-400 text-sm mt-1 group-hover:text-slate-300">Direct Access</span>
             </div>
           </button>
 
           <button 
-            onClick={onOpenAutomatePage}
+            onClick={onOpenRoadmap}
             className="px-8 py-4 rounded-xl border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800/50 transition-all font-medium flex items-center gap-2 group"
           >
-            Learn More <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            View Growth Roadmap <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

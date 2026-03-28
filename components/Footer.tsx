@@ -56,6 +56,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               <li><button onClick={() => onNavigate('pricing')} className="hover:text-blue-400 transition-colors text-left w-full">Partnerships</button></li>
               <li><button onClick={() => onNavigate('integrations')} className="hover:text-blue-400 transition-colors text-left w-full">Managed Integrations</button></li>
               <li><button onClick={() => onNavigate('roadmap')} className="hover:text-blue-400 transition-colors text-left w-full">Strategic Growth Roadmap</button></li>
+              <li><button onClick={() => onNavigate('demo')} className="hover:text-blue-400 transition-colors text-left w-full">Live Industry Demos</button></li>
             </ul>
           </div>
 

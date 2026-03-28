@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, TrendingUp, Clock, Target, Quote } from 'lucide-react';
+import { ArrowLeft, TrendingUp, Clock, Target, Quote, Briefcase, BarChart } from 'lucide-react';
 
 interface SuccessHubPageProps {
   onBack: () => void;
@@ -10,25 +10,29 @@ export default function SuccessHubPage({ onBack }: SuccessHubPageProps) {
     {
       name: "Michael Chen",
       company: "Zenith Media",
-      headline: "Consolidating 5 Fragmented Systems into One Managed Infrastructure",
+      role: "Managing Director",
+      headline: "From Fragmentation to Harmony.",
+      subheadline: "Consolidated 5 tools into 1 managed infrastructure.",
       results: [
-        { label: "Operational ROI", value: "312%", icon: <TrendingUp className="w-5 h-5" /> },
-        { label: "Time Saved/Week", value: "25 Hours", icon: <Clock className="w-5 h-5" /> },
-        { label: "Lead Conversion", value: "+45%", icon: <Target className="w-5 h-5" /> }
+        { label: "Hours Saved/Week", value: "20+", icon: <Clock className="w-5 h-5" /> },
+        { label: "Tools Eliminated", value: "5", icon: <Briefcase className="w-5 h-5" /> },
+        { label: "Operational ROI", value: "312%", icon: <TrendingUp className="w-5 h-5" /> }
       ],
-      quote: "The managed systems consolidated our entire business operations into one seamless flow. We moved from 5 fragmented systems to a single, professionally managed infrastructure.",
+      quote: "We were drowning in subscriptions and Zapier errors. SynapseHub's team came in, audited our stack, and rebuilt it into a single, silent engine. I saved 20 hours of manual labor in the first week.",
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
     },
     {
       name: "David Miller",
       company: "ScaleUp Digital",
-      headline: "Strategic Deployment for Rapid Market Expansion",
+      role: "CEO",
+      headline: "Revenue Acceleration.",
+      subheadline: "Deployed Managed AI Support Agents and Lead Recovery.",
       results: [
-        { label: "Market Entry", value: "14 Days", icon: <TrendingUp className="w-5 h-5" /> },
-        { label: "Tech Overhead", value: "-60%", icon: <Clock className="w-5 h-5" /> },
-        { label: "System Uptime", value: "99.99%", icon: <Target className="w-5 h-5" /> }
+        { label: "Booked Appts", value: "+30%", icon: <Target className="w-5 h-5" /> },
+        { label: "Response Time", value: "< 2m", icon: <Clock className="w-5 h-5" /> },
+        { label: "Revenue Increase", value: "$45k", icon: <BarChart className="w-5 h-5" /> }
       ],
-      quote: "The most strategic operations partner for high-growth companies. The results were immediate, and the strategic deployment by the SynapseHub team saved us months of technical trial and error.",
+      quote: "I didn't want another tool; I wanted a result. The managed AI agents started booking appointments while I slept. We saw a 30% increase in qualified calls within 30 days of deployment.",
       image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
     }
   ];
@@ -44,43 +48,57 @@ export default function SuccessHubPage({ onBack }: SuccessHubPageProps) {
           Back to Home
         </button>
 
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-            Real Results. Managed by Experts.
-          </h1>
-          <p className="text-xl text-slate-400 mb-12 leading-relaxed">
-            We measure our success by the operational efficiency and ROI we deliver to our partners. Explore how high-growth companies are scaling faster with SynapseHub's managed infrastructure.
-          </p>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
+              Real Results. <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Managed by Experts.</span>
+            </h1>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-light">
+              We don't sell software; we sell operational outcomes. See how our managed infrastructure transforms chaos into revenue for high-growth enterprises.
+            </p>
+          </div>
 
-          <div className="space-y-16 mb-16">
+          <div className="space-y-16 mb-20">
             {caseStudies.map((study, index) => (
-              <div key={index} className="bg-slate-900/50 border border-slate-800 rounded-3xl overflow-hidden">
+              <div key={index} className="bg-slate-900/50 border border-slate-800 rounded-3xl overflow-hidden hover:border-slate-700 transition-colors">
                 <div className="p-8 md:p-12">
-                  <div className="flex flex-col md:flex-row gap-8 items-start">
+                  <div className="flex flex-col md:flex-row gap-10 items-start">
                     <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-6">
-                        <img src={study.image} alt={study.name} className="w-16 h-16 rounded-full object-cover ring-2 ring-blue-500/20" />
+                      <div className="flex items-center gap-4 mb-8">
+                        <img src={study.image} alt={study.name} className="w-16 h-16 rounded-full object-cover ring-4 ring-slate-800" />
                         <div>
                           <h3 className="text-xl font-bold text-white">{study.name}</h3>
-                          <p className="text-slate-500 text-sm">{study.company}</p>
+                          <p className="text-slate-400 text-sm font-medium">{study.role}, {study.company}</p>
                         </div>
                       </div>
-                      <h2 className="text-2xl font-bold text-white mb-6 leading-tight">
-                        {study.headline}
-                      </h2>
-                      <div className="bg-slate-950/50 rounded-2xl p-6 border border-slate-800 mb-8 italic text-slate-300 relative">
-                        <Quote className="absolute -top-3 -left-3 w-8 h-8 text-slate-800 fill-current opacity-50" />
-                        "{study.quote}"
+                      
+                      <div className="mb-8">
+                        <h2 className="text-3xl font-bold text-white mb-2 leading-tight">
+                          {study.headline}
+                        </h2>
+                        <p className="text-blue-400 font-medium text-lg">
+                          {study.subheadline}
+                        </p>
+                      </div>
+
+                      <div className="bg-slate-950/50 rounded-2xl p-8 border border-slate-800 relative">
+                        <Quote className="absolute -top-4 -left-4 w-10 h-10 text-slate-800 fill-current" />
+                        <p className="text-slate-300 italic leading-relaxed relative z-10">
+                          "{study.quote}"
+                        </p>
                       </div>
                     </div>
-                    <div className="w-full md:w-64 space-y-4">
+
+                    <div className="w-full md:w-72 space-y-4 shrink-0">
+                      <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Key Metrics</div>
                       {study.results.map((result, i) => (
-                        <div key={i} className="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center gap-4">
-                          <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400">
+                        <div key={i} className="bg-slate-950 border border-slate-800 p-5 rounded-xl flex items-center gap-4 hover:border-blue-500/30 transition-colors group">
+                          <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400 group-hover:text-blue-300 transition-colors">
                             {result.icon}
                           </div>
                           <div>
-                            <p className="text-2xl font-bold text-white">{result.value}</p>
+                            <p className="text-2xl font-bold text-white group-hover:text-blue-100 transition-colors">{result.value}</p>
                             <p className="text-slate-500 text-xs uppercase font-bold tracking-wider">{result.label}</p>
                           </div>
                         </div>
@@ -92,10 +110,10 @@ export default function SuccessHubPage({ onBack }: SuccessHubPageProps) {
             ))}
           </div>
 
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-white mb-4">Ready to be our next success story?</h2>
-            <p className="text-slate-400 mb-8">
-              Let's architect your managed operations infrastructure and start scaling.
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 text-center">
+            <h2 className="text-3xl font-bold text-white mb-4">Ready to be our next strategic case study?</h2>
+            <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
+              Our engineering team is ready to audit your infrastructure and identify immediate ROI opportunities.
             </p>
             <button 
               className="px-8 py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/25"

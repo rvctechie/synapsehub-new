@@ -51,7 +51,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
           </div>
 
           <div className="hidden md:flex items-center gap-8">
-            <button onClick={() => onNavigate('features')} className="text-sm font-bold text-slate-300 hover:text-white transition-colors">Managed Solutions</button>
+            <button onClick={() => onNavigate('automate')} className="text-sm font-bold text-slate-300 hover:text-white transition-colors">Managed Solutions</button>
             <button onClick={() => onNavigate('pricing')} className="text-sm font-bold text-slate-300 hover:text-white transition-colors">Partnerships</button>
             <button onClick={() => onNavigate('home')} className="text-sm font-bold text-slate-300 hover:text-white transition-colors">Infrastructure Preview</button>
             <button className="text-sm font-bold text-slate-300 hover:text-white transition-colors">Partner Portal</button>
@@ -66,7 +66,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-slate-900 border-b border-slate-800 shadow-xl p-4 flex flex-col gap-4">
-          <button onClick={() => { onNavigate('features'); setIsMobileMenuOpen(false); }} className="text-base font-bold text-slate-300 py-2 text-left">Managed Solutions</button>
+          <button onClick={() => { onNavigate('automate'); setIsMobileMenuOpen(false); }} className="text-base font-bold text-slate-300 py-2 text-left">Managed Solutions</button>
           <button onClick={() => { onNavigate('pricing'); setIsMobileMenuOpen(false); }} className="text-base font-bold text-slate-300 py-2 text-left">Partnerships</button>
           <button onClick={() => { onNavigate('home'); setIsMobileMenuOpen(false); }} className="text-base font-bold text-slate-300 py-2 text-left">Infrastructure Preview</button>
           <hr className="border-slate-800" />
