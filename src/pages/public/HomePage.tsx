@@ -38,7 +38,8 @@ const features = [
   {
     icon: '📈',
     title: 'Intelligence Dashboard',
-    description: 'Real-time analytics on conversations, conversions, sentiment, and ROI. Know exactly what's working.',
+    description:
+      "Real-time analytics on conversations, conversions, sentiment, and ROI. Know exactly what's working.",
   },
 ];
 
