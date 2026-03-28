@@ -90,9 +90,11 @@ export default function App() {
   return (
     <HelmetProvider>
       <ErrorBoundary>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
+        <RouterProvider router={router}>
+          <AuthProvider>
+            {/* App content is rendered through router configuration */}
+          </AuthProvider>
+        </RouterProvider>
       </ErrorBoundary>
     </HelmetProvider>
   );
