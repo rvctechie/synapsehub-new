@@ -270,11 +270,10 @@ export default function ChatWidget({ isOpen: externalIsOpen, onToggle, currentRo
       setIsConnecting(true);
       setError(null);
       
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      const apiKey = process.env.API_KEY;
       if (!apiKey) {
-        setError("API Key missing. Please set VITE_GEMINI_API_KEY in your environment.");
+        setError("API Key missing");
         setIsConnecting(false);
-        console.warn("⚠️  VITE_GEMINI_API_KEY environment variable is not set. Chat features will not work.");
         return;
       }
 
