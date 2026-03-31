@@ -112,28 +112,28 @@ export default function App() {
             <BookingSection onOpenChat={() => setIsChatOpen(true)} onOpenVoice={() => setIsVoiceOpen(true)} />
             <FAQ />
             
-            <section className="py-32 relative overflow-hidden">
+            <section className="py-28 relative overflow-hidden border-t border-slate-900">
               <div className="absolute inset-0 bg-blue-900/20 z-0"></div>
               <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950 z-10"></div>
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-blue-600/20 blur-[120px] rounded-full z-0"></div>
 
               <div className="max-w-4xl mx-auto px-6 relative z-20 text-center">
-                 <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white tracking-tight">Ready to stop leaking leads?</h2>
+                 <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white tracking-tight">Ready to see if the fit is real?</h2>
                  <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto font-light">
-                   Pick the fastest path: explore a live example, qualify in chat, start a call, or book direct if you are ready.
+                   Start with the fastest qualification path and see whether SynapseHub is the right next move.
                  </p>
                  <div className="flex flex-col sm:flex-row justify-center gap-4">
                     <button
-                      onClick={() => navigateTo('demo')}
+                      onClick={() => setIsChatOpen(true)}
                       className="px-8 py-4 rounded-xl bg-blue-600 text-white hover:bg-blue-500 transition-all font-medium shadow-lg shadow-blue-900/30"
                     >
-                      Explore live examples
+                      Qualify in Chat
                     </button>
                     <button
-                      onClick={() => setIsChatOpen(true)}
+                      onClick={() => setIsVoiceOpen(true)}
                       className="px-8 py-4 rounded-xl border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800/50 transition-all font-medium"
                     >
-                      Qualify in Chat
+                      Start Guided Call
                     </button>
                  </div>
               </div>

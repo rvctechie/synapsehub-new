@@ -67,16 +67,16 @@ export default function LeadCaptureSection({ onOpenChat, onOpenVoice }: LeadCapt
         try {
           const result = await callSaveLead(payload);
           if (result?.ok) saved = true;
-          else setError(result?.error || 'Could not save lead through edge function.');
+          else setError(result?.error || 'Could not save your request right now.');
         } catch (e) {
-          setError('Edge function lead save failed.');
+          setError('Could not save your request right now.');
         }
       }
 
       if (!saved && hasSupabaseConfig) {
         const result = await saveLeadToSupabase(payload);
         if (!result.ok) {
-          setError(result.error || 'Could not save lead to Supabase.');
+          setError(result.error || 'Could not save your request right now.');
         } else {
           saved = true;
         }
@@ -106,24 +106,24 @@ export default function LeadCaptureSection({ onOpenChat, onOpenVoice }: LeadCapt
 
   return (
     <section className="py-24 bg-slate-950 border-t border-slate-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 items-start">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/30 border border-emerald-500/30 text-emerald-400 text-sm font-semibold mb-6">
-              <CheckCircle2 className="w-4 h-4" /> Ready for serious buyers
+              <CheckCircle2 className="w-4 h-4" /> Fast qualification path
             </div>
             <h2 className="text-4xl font-bold text-white mb-6 tracking-tight">
-              Get qualified for the right SynapseHub starting point
+              Prefer to skip straight to qualification?
             </h2>
             <p className="text-lg text-slate-400 mb-8 leading-relaxed">
-              If you already know the business problem, submit the form and give SynapseHub the context needed for a strategy call or technical review.
+              If you already know what is breaking in the business, send the essentials and SynapseHub can review the fit faster.
             </p>
 
             <div className="space-y-4 text-slate-300">
               {[
-                'Best for businesses already getting leads but leaking revenue in follow-up',
-                'Useful if you want the team to recommend the right starting tier',
-                'Faster path for serious operators than wandering through a generic contact page'
+                'Useful when missed leads or slow follow-up are already obvious',
+                'Helps narrow the right starting tier faster',
+                'Works well for serious operators who want less back-and-forth'
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0 border border-emerald-500/20 mt-0.5">
@@ -145,7 +145,7 @@ export default function LeadCaptureSection({ onOpenChat, onOpenVoice }: LeadCapt
                 onClick={onOpenVoice}
                 className="px-6 py-3 border border-slate-700 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors"
               >
-                Start Voice Strategy Call
+                Start Guided Call
               </button>
             </div>
           </div>
@@ -156,11 +156,9 @@ export default function LeadCaptureSection({ onOpenChat, onOpenVoice }: LeadCapt
                 <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">Request captured</h3>
+                <h3 className="text-2xl font-bold text-white mb-3">Request received</h3>
                 <p className="text-slate-400 mb-6">
-                  {hasEdgeFunctionsConfig || hasSupabaseConfig
-                    ? 'Your request has been sent to the lead pipeline.'
-                    : 'Your request was saved locally in this build. Add Supabase and edge-function configuration before production launch.'}
+                  Your details have been captured. The next step is a review or a follow-up conversation depending on fit.
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
@@ -233,16 +231,8 @@ export default function LeadCaptureSection({ onOpenChat, onOpenVoice }: LeadCapt
                   disabled={submitting || !canSubmit}
                   className="w-full py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving request...</> : 'Submit for strategy review'}
+                  {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : 'Send for review'}
                 </button>
-
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  {hasEdgeFunctionsConfig
-                    ? 'Edge functions are configured for lead intake.'
-                    : hasSupabaseConfig
-                      ? 'Supabase is configured for direct lead storage.'
-                      : 'Supabase is not configured yet. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY before launch.'}
-                </p>
               </form>
             )}
           </div>

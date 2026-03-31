@@ -34,7 +34,7 @@ const features = [
   },
   {
     icon: <TabletSmartphone className="w-6 h-6 text-white" />,
-    title: 'Operator Visibility',
+    title: 'Client Visibility',
     description: 'See leads, appointments, and pipeline activity in one place while SynapseHub handles the setup and operational maintenance.',
     color: 'bg-indigo-600'
   },
@@ -46,8 +46,8 @@ const features = [
   },
   {
     icon: <Bot className="w-6 h-6 text-white" />,
-    title: 'AI Qualification & Booking',
-    description: 'Use AI agents to answer basic questions, qualify leads, and move serious prospects toward a booked appointment.',
+    title: 'Guided Qualification & Booking',
+    description: 'Handle common questions, qualify serious buyers, and move them toward the next step without making the experience feel mechanical.',
     color: 'bg-pink-600'
   }
 ];
@@ -77,7 +77,7 @@ export default function Features() {
               <div className="pt-4 border-t border-slate-800/50 mt-auto">
                 <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  Managed execution included
+                  Managed delivery included
                 </span>
               </div>
             </div>

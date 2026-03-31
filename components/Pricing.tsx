@@ -29,8 +29,8 @@ export default function Pricing({ onOpenChat }: PricingProps) {
       setupFee: 1997,
       pitch: 'Best when you need leads qualified faster, appointments booked more consistently, and admin work reduced.',
       deliverables: [
-        'AI appointment qualification',
-        'Booking and reminder flows',
+        'Appointment qualification flow',
+        'Booking and reminder sequences',
         'Referral and internal process support'
       ],
       roi: 'Best fit for businesses where manual follow-up is slowing growth and wasting staff time.',
@@ -92,7 +92,7 @@ export default function Pricing({ onOpenChat }: PricingProps) {
             >
               {tier.highlight && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wide shadow-lg uppercase">
-                  Most practical starting point
+                  Best place to start
                 </div>
               )}
               
