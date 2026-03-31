@@ -15,8 +15,8 @@ const faqs = [
     answer: 'The setup fee covers implementation work: system setup, workflow design, integrations, configuration, and rollout. The more complex your business is, the more setup work is required up front.'
   },
   {
-    question: 'Do you manage the AI and automation for us?',
-    answer: 'Yes. SynapseHub is a managed service. We set up and maintain the lead response, appointment, follow-up, and automation layer so you are not left handling every moving part yourself.'
+    question: 'How much does SynapseHub handle for us?',
+    answer: 'SynapseHub is a managed service. We set up and maintain the lead response, appointment, follow-up, and automation layer so you are not left handling every moving part yourself.'
   },
   {
     question: 'Can we still see what is happening?',
