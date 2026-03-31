@@ -7,11 +7,11 @@ interface StatusPageProps {
 
 export default function StatusPage({ onBack }: StatusPageProps) {
   const systems = [
-    { name: "Managed Infrastructure", status: "Operational", icon: <Server className="w-5 h-5" /> },
-    { name: "AI Agent Operations", status: "Operational", icon: <Activity className="w-5 h-5" /> },
-    { name: "Data Processing Engine", status: "Operational", icon: <Database className="w-5 h-5" /> },
-    { name: "Communication Gateways (SMS/Email)", status: "Operational", icon: <MessageSquare className="w-5 h-5" /> },
-    { name: "Global CDN & Edge Delivery", status: "Operational", icon: <Globe className="w-5 h-5" /> }
+    { name: 'Website availability', status: 'Operational', icon: <Server className="w-5 h-5" /> },
+    { name: 'Qualification flow', status: 'Operational', icon: <Activity className="w-5 h-5" /> },
+    { name: 'Lead storage', status: 'Operational', icon: <Database className="w-5 h-5" /> },
+    { name: 'Messaging channels', status: 'Operational', icon: <MessageSquare className="w-5 h-5" /> },
+    { name: 'Public site delivery', status: 'Operational', icon: <Globe className="w-5 h-5" /> }
   ];
 
   return (
@@ -30,14 +30,14 @@ export default function StatusPage({ onBack }: StatusPageProps) {
             <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-emerald-500" />
             </div>
-            <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">All Systems Operational</h1>
+            <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Service Status: Operational</h1>
             <p className="text-slate-400 text-lg">
-              Our engineering team is monitoring all managed infrastructure in real-time. No issues detected.
+              Core site and qualification systems are currently available.
             </p>
           </div>
 
           <div className="space-y-4 mb-12">
-            <h2 className="text-xl font-bold text-white px-4 mb-6 uppercase tracking-widest text-sm">System Health Details</h2>
+            <h2 className="text-xl font-bold text-white px-4 mb-6 uppercase tracking-widest text-sm">Status details</h2>
             {systems.map((system, index) => (
               <div key={index} className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -55,9 +55,9 @@ export default function StatusPage({ onBack }: StatusPageProps) {
           </div>
 
           <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl">
-            <h3 className="text-lg font-bold text-white mb-2">Proactive Maintenance</h3>
+            <h3 className="text-lg font-bold text-white mb-2">Operational note</h3>
             <p className="text-slate-400 text-sm leading-relaxed mb-0">
-              We perform rolling updates and proactive maintenance during low-traffic windows to ensure 99.99% uptime for all partner infrastructure. If you notice any anomalies, please contact your dedicated Operations Success Manager immediately.
+              This page should reflect real service state. If you do not have live monitoring yet, keep status claims conservative and update them only when they can be verified.
             </p>
           </div>
         </div>

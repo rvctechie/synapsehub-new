@@ -4,51 +4,51 @@ import { Radio, Workflow, ShieldCheck, Clock, Layers, TabletSmartphone, LineChar
 const features = [
   {
     icon: <Radio className="w-6 h-6 text-white" />,
-    title: "Managed Communication Hub",
-    description: "We consolidate and manage your Facebook, Instagram, Google Chat, SMS, and Emails into one single, high-efficiency conversation stream.",
-    color: "bg-blue-600"
+    title: 'Unified Lead Inbox',
+    description: 'Bring inbound messages, calls, and follow-up into one managed workflow so leads stop slipping through disconnected channels.',
+    color: 'bg-blue-600'
   },
   {
     icon: <Workflow className="w-6 h-6 text-white" />,
-    title: "Automated Lead Recovery",
-    description: "Our managed systems automatically engage leads who call when you're busy, ensuring no opportunity is lost to a competitor.",
-    color: "bg-rose-600"
+    title: 'Missed Lead Recovery',
+    description: 'Instant follow-up sequences respond when your team misses a call or delays a reply, helping you recover revenue before it goes cold.',
+    color: 'bg-rose-600'
   },
   {
     icon: <ShieldCheck className="w-6 h-6 text-white" />,
-    title: "Managed Brand Reputation",
-    description: "We oversee your Google Review strategy, automating requests and managing responses to boost your local ranking and trust.",
-    color: "bg-yellow-600"
+    title: 'Review & Trust Systems',
+    description: 'Automate review requests and reputation follow-up so your brand looks stronger where buyers are already checking.',
+    color: 'bg-yellow-600'
   },
   {
     icon: <Clock className="w-6 h-6 text-white" />,
-    title: "Managed Appointment Systems",
-    description: "We build and maintain custom booking systems with managed reminder sequences that reduce no-shows by up to 80%.",
-    color: "bg-emerald-600"
+    title: 'Appointment Flow Automation',
+    description: 'Build booking, reminders, and no-show reduction into a cleaner managed flow that helps your calendar fill more consistently.',
+    color: 'bg-emerald-600'
   },
   {
     icon: <Layers className="w-6 h-6 text-white" />,
-    title: "Strategic Funnel Management",
-    description: "Professional design and technical management of high-converting landing pages, course portals, and client areas.",
-    color: "bg-purple-600"
+    title: 'Landing Pages & Funnels',
+    description: 'Deploy lead capture pages and follow-up sequences that match the way your business actually sells, not generic templates.',
+    color: 'bg-purple-600'
   },
   {
     icon: <TabletSmartphone className="w-6 h-6 text-white" />,
-    title: "Real-Time Operations Portal",
-    description: "Access your managed business infrastructure from anywhere. Monitor leads, appointments, and invoices on the go.",
-    color: "bg-indigo-600"
+    title: 'Operator Visibility',
+    description: 'See leads, appointments, and pipeline activity in one place while SynapseHub handles the setup and operational maintenance.',
+    color: 'bg-indigo-600'
   },
   {
     icon: <LineChart className="w-6 h-6 text-white" />,
-    title: "Managed Sales Intelligence",
-    description: "We architect visual sales pipelines and provide deep-dive analytics so you know exactly where your growth is coming from.",
-    color: "bg-cyan-600"
+    title: 'Pipeline Reporting',
+    description: 'Track where leads are coming from, where they stall, and what should be fixed first so growth decisions get clearer.',
+    color: 'bg-cyan-600'
   },
   {
     icon: <Bot className="w-6 h-6 text-white" />,
-    title: "Managed AI Support Agents",
-    description: "We train and oversee custom AI agents that handle FAQs and book appointments for you 24/7 with human-like precision.",
-    color: "bg-pink-600"
+    title: 'AI Qualification & Booking',
+    description: 'Use AI agents to answer basic questions, qualify leads, and move serious prospects toward a booked appointment.',
+    color: 'bg-pink-600'
   }
 ];
 
@@ -57,10 +57,10 @@ export default function Features() {
     <section id="features" className="py-24 bg-slate-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-blue-500 font-bold tracking-wide uppercase text-sm mb-2">The Managed Advantage</h2>
-          <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">Operational Excellence, Delivered</h3>
+          <h2 className="text-blue-500 font-bold tracking-wide uppercase text-sm mb-2">What we actually improve</h2>
+          <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">Built to fix lead loss, follow-up delay, and admin drag</h3>
           <p className="text-lg text-slate-400">
-             We don't just provide technical systems. We provide the managed infrastructure and technical expertise to scale your business.
+            SynapseHub is for businesses that want more booked appointments and cleaner operations without stitching everything together themselves.
           </p>
         </div>
 
@@ -77,7 +77,7 @@ export default function Features() {
               <div className="pt-4 border-t border-slate-800/50 mt-auto">
                 <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  Full Technical Management Included
+                  Managed execution included
                 </span>
               </div>
             </div>

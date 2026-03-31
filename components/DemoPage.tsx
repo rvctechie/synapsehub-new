@@ -11,7 +11,7 @@ export default function DemoPage({ onSelectDemo }: DemoPageProps) {
       id: 'Dentist',
       name: 'Luxury Dental Clinic',
       icon: <Stethoscope className="w-8 h-8 text-blue-400" />,
-      description: 'Experience Chloe, the Patient Concierge, and Dr. Marcus, the Clinical Auditor.',
+      description: 'Experience a premium intake flow designed to guide new patient inquiries naturally toward booking.',
       gradient: 'from-blue-900/40 to-cyan-900/40',
       border: 'border-blue-500/30'
     },
@@ -19,7 +19,7 @@ export default function DemoPage({ onSelectDemo }: DemoPageProps) {
       id: 'Interior Design',
       name: 'High-End Interior Design',
       icon: <Paintbrush className="w-8 h-8 text-purple-400" />,
-      description: 'Interact with our Design Consultant AI to qualify high-ticket remodeling leads.',
+      description: 'See how a high-ticket consultation flow can qualify serious renovation prospects with a more polished first touch.',
       gradient: 'from-purple-900/40 to-pink-900/40',
       border: 'border-purple-500/30'
     },
@@ -27,7 +27,7 @@ export default function DemoPage({ onSelectDemo }: DemoPageProps) {
       id: 'MedSpa',
       name: 'Medical Aesthetics (MedSpa)',
       icon: <Sparkles className="w-8 h-8 text-emerald-400" />,
-      description: 'See how our Aesthetics Concierge books consultations and handles treatment FAQs.',
+      description: 'Preview a consultation intake experience built to handle common questions and move prospects toward the next step.',
       gradient: 'from-emerald-900/40 to-teal-900/40',
       border: 'border-emerald-500/30'
     }
@@ -38,10 +38,10 @@ export default function DemoPage({ onSelectDemo }: DemoPageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-            Interactive Industry <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Showroom</span>
+            Industry <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Showroom</span>
           </h1>
           <p className="text-xl text-slate-400">
-            Select an industry below to test-drive a live, voice-enabled AI agent configured specifically for that niche.
+            Explore how a polished intake and qualification experience can be adapted for different types of businesses.
           </p>
         </div>
 
@@ -62,7 +62,7 @@ export default function DemoPage({ onSelectDemo }: DemoPageProps) {
                   {industry.description}
                 </p>
                 <div className="flex items-center text-white font-medium group-hover:text-blue-400 transition-colors">
-                  Launch Demo Agent <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  Open Demo Experience <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </button>

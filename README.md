@@ -1,20 +1,66 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# SynapseHub
 
-# Run and deploy your AI Studio app
+SynapseHub is a Vite + React marketing and qualification site designed to feel premium and human on the surface while using automated qualification and lead routing underneath.
 
-This contains everything you need to run your app locally.
+## Current goal
 
-View your app in AI Studio: https://ai.studio/apps/dd5526fe-5686-4c03-94ca-fd231ecf3e8a
+Turn the site into a monetizable lead intake system for service businesses.
 
-## Run Locally
+## What has been improved
 
-**Prerequisites:**  Node.js
+- clearer homepage positioning
+- stronger offer and pricing language
+- humanized chat / voice / messaging labels
+- on-site lead capture form
+- Supabase lead intake support
+- booking and messaging CTA section
+- reduced overclaiming in visible copy
 
+## Current known limitations
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Before calling this production-ready, address these:
+
+1. Gemini calls still run from the frontend unless you move them behind a server-side or edge-function path
+2. Voice flow does not yet persist structured leads to Supabase
+3. Public proof/testimonials still need to be replaced with real proof
+4. Build/deploy verification must be completed in the target environment
+5. Abuse protection / rate limiting is not yet implemented
+
+## Environment variables
+
+Create `.env.local` with the values you actually use:
+
+```bash
+VITE_GEMINI_API_KEY=...
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+VITE_BOOKING_URL=...
+VITE_WHATSAPP_URL=...
+```
+
+## Supabase
+
+See `SUPABASE_SETUP.md` for table and policy setup.
+
+## Launch checklist
+
+- [ ] `npm install`
+- [ ] confirm `.env.local` is present
+- [ ] confirm `leads` table exists in Supabase
+- [ ] confirm RLS/policy allows insert for the intended client path
+- [ ] test form submission
+- [ ] test chat qualification and lead save
+- [ ] test booking link
+- [ ] test WhatsApp link
+- [ ] replace placeholder proof with real proof
+- [ ] verify all public claims are true
+- [ ] run production build
+- [ ] deploy and test live domain flow end to end
+- [ ] follow `DEPLOY_TEST_CHECKLIST.md`
+
+## Local run
+
+```bash
+npm install
+npm run dev
+```

@@ -3,22 +3,22 @@ import { Star, Quote } from 'lucide-react';
 
 const testimonials = [
   {
-    name: "Michael Chen",
-    role: "Founder, Zenith Media",
-    content: "SynapseHub's managed systems consolidated our entire business operations into one seamless flow. We moved from 5 fragmented systems to a single, professionally managed infrastructure.",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+    name: 'Michael Chen',
+    role: 'Founder, Zenith Media',
+    content: 'We were leaking inbound demand because follow-up was inconsistent. SynapseHub helped us centralize lead response and cut the delay between inquiry and first contact.',
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
-    name: "Sarah Johnson",
-    role: "CEO, Growth Partners",
-    content: "The operational oversight provided by the SynapseHub team is unmatched. We're saving 20 hours a week because they handle the technical execution for us. It's a total game changer.",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+    name: 'Sarah Johnson',
+    role: 'CEO, Growth Partners',
+    content: 'The value was not just automation. It was getting manual admin and booking friction off our team so they could focus on revenue-generating work again.',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
-    name: "David Miller",
-    role: "Director, ScaleUp Digital",
-    content: "The most strategic operations partner for high-growth companies. The results were immediate, and the strategic deployment by the SynapseHub team saved us months of technical trial and error.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+    name: 'David Miller',
+    role: 'Director, ScaleUp Digital',
+    content: 'Instead of adding another disconnected platform, we got a managed rollout focused on response time, cleaner pipeline flow, and fewer missed opportunities.',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   }
 ];
 
@@ -26,7 +26,12 @@ export default function Testimonials() {
   return (
     <section className="py-24 bg-slate-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-16">Loved by Companies Worldwide</h2>
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">What buyers need to believe</h2>
+          <p className="text-slate-400">
+            The offer gets stronger when visitors can picture the operational win, not just the technology behind it.
+          </p>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((t, index) => (

@@ -1,116 +1,174 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Loader2, Bot, Activity } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Activity } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
+import { hasSupabaseConfig, saveLeadToSupabase } from '../src-supabase';
+import { callChatQualify, hasEdgeFunctionsConfig } from '../edge-api';
 
 interface ChatWidgetProps {
   isOpen?: boolean;
   onToggle?: (isOpen: boolean) => void;
   userStatus?: 'Prospect' | 'ActivePartner';
-  demoIndustry?: string; 
+  demoIndustry?: string;
 }
 
 type AgentRole = 'Strategist' | 'SalesTech' | 'SuccessManager';
+type LeadStage = 'opening' | 'problem' | 'volume' | 'timeline' | 'qualification' | 'contact' | 'cta' | 'handoff';
+
+type ChatMessage = { role: 'user' | 'model', text: string, isHidden?: boolean };
+
+type LeadProfile = {
+  stage: LeadStage;
+  businessType?: string;
+  mainProblem?: string;
+  leadVolume?: string;
+  timeline?: string;
+  monthlyRevenue?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  qualified?: boolean;
+  askedForContact?: boolean;
+  askedForCta?: boolean;
+};
+
+const INITIAL_PROFILE: LeadProfile = {
+  stage: 'opening',
+  qualified: false,
+  askedForContact: false,
+  askedForCta: false,
+};
+
+const extractEmail = (text: string) => {
+  const match = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  return match?.[0];
+};
+
+const looksLikePhone = (text: string) => /\+?[0-9][0-9\s().-]{7,}/.test(text);
+
+const inferLeadProfile = (profile: LeadProfile, userText: string): LeadProfile => {
+  const text = userText.trim();
+  const lower = text.toLowerCase();
+  const next = { ...profile };
+
+  if (!next.mainProblem) next.mainProblem = text;
+
+  if (!next.businessType) {
+    if (lower.includes('clinic') || lower.includes('dental') || lower.includes('medspa')) next.businessType = 'clinic';
+    else if (lower.includes('agency')) next.businessType = 'agency';
+    else if (lower.includes('real estate')) next.businessType = 'real estate';
+    else if (lower.includes('ecommerce') || lower.includes('shop')) next.businessType = 'ecommerce';
+    else if (lower.includes('service business')) next.businessType = 'service business';
+  }
+
+  if (!next.leadVolume) {
+    const volumeHint = text.match(/\b(\d+\+?|\d+\s*[-–]\s*\d+)\b/);
+    if (volumeHint && (lower.includes('lead') || lower.includes('inbound') || lower.includes('calls') || lower.includes('appointments'))) {
+      next.leadVolume = volumeHint[0];
+    }
+  }
+
+  if (!next.timeline) {
+    if (lower.includes('asap') || lower.includes('immediately') || lower.includes('this week')) next.timeline = 'immediate';
+    else if (lower.includes('this month') || lower.includes('within 30')) next.timeline = '30 days';
+    else if (lower.includes('next month') || lower.includes('quarter')) next.timeline = 'later';
+  }
+
+  if (!next.monthlyRevenue) {
+    if (lower.includes('under 10k')) next.monthlyRevenue = 'under 10k';
+    else if (lower.includes('10k') || lower.includes('20k') || lower.includes('30k')) next.monthlyRevenue = '10k-30k';
+    else if (lower.includes('50k') || lower.includes('100k')) next.monthlyRevenue = '50k+';
+  }
+
+  const email = extractEmail(text);
+  if (email) next.email = email;
+  if (!next.phone && looksLikePhone(text)) next.phone = text;
+
+  if (!next.name) {
+    const nameMatch = text.match(/(?:i am|i'm|my name is)\s+([A-Za-z][A-Za-z' -]{1,30})/i);
+    if (nameMatch) next.name = nameMatch[1].trim();
+  }
+
+  next.qualified = Boolean(next.mainProblem && (next.leadVolume || next.timeline || next.monthlyRevenue));
+  return next;
+};
 
 export default function ChatWidget({ isOpen: externalIsOpen, onToggle, userStatus = 'Prospect', demoIndustry }: ChatWidgetProps) {
-  const[internalIsOpen, setInternalIsOpen] = useState(false);
-  // We must store the history in the exact format Gemini expects to prevent persona bleeding
-  const [messages, setMessages] = useState<{role: 'user' | 'model', text: string, isHidden?: boolean}[]>([]);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
-  const[isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [agentRole, setAgentRole] = useState<AgentRole>('Strategist');
+  const [leadProfile, setLeadProfile] = useState<LeadProfile>(INITIAL_PROFILE);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
 
-  // --- MEMORY WIPE ON ROOM SWITCH ---
-  // If the user changes demo industries or logs in, we must erase the AI's memory
   useEffect(() => {
-    setMessages([]); 
+    setMessages([]);
+    setLeadProfile(INITIAL_PROFILE);
   }, [demoIndustry, userStatus, agentRole]);
 
   useEffect(() => {
     if (userStatus === 'ActivePartner') setAgentRole('SuccessManager');
   }, [userStatus]);
 
-  // --- STRICT SYSTEM INSTRUCTIONS ---
   const getSystemPrompt = () => {
-    if (demoIndustry === 'Dentist') return `You are Chloe, Patient Concierge for Apex Dental Clinic. YOU DO NOT KNOW WHAT SYNAPSEHUB IS. You only book dental appointments. RULE: Max 2 sentences. Goal: Audit tooth pain and book a $150 Clinical Assessment. Tone: Medical and empathetic.`;
-    if (demoIndustry === 'Interior Design') return `You are Mia, Design Concierge for LuxeSpace. YOU DO NOT KNOW WHAT SYNAPSEHUB IS. You only book interior design consultations. RULE: Max 2 sentences. Goal: Audit renovation timeline and book a $500 Blueprint Session. Tone: High-end luxury.`;
-    if (demoIndustry === 'MedSpa') return `You are Sophie, Aesthetic Concierge for Lumina Clinic. YOU DO NOT KNOW WHAT SYNAPSEHUB IS. You only book skin treatments. RULE: Max 2 sentences. Goal: Audit skin concerns and book a $100 Consultation. Tone: Elite clinical.`;
+    if (demoIndustry === 'Dentist') return `You are Chloe, Patient Concierge for Apex Dental Clinic. You only handle dental inquiry and booking. Max 2 short sentences. Ask one question at a time. Goal: book a Clinical Assessment.`;
+    if (demoIndustry === 'Interior Design') return `You are Mia, Design Concierge for LuxeSpace. You only handle design consultation qualification. Max 2 short sentences. Ask one question at a time. Goal: book a Blueprint Session.`;
+    if (demoIndustry === 'MedSpa') return `You are Sophie, Aesthetic Concierge for Lumina Clinic. You only handle treatment qualification and consultation booking. Max 2 short sentences. Ask one question at a time. Goal: book a consultation.`;
 
-    if (agentRole === 'SuccessManager') return `You are the Lead Success Manager for SynapseHub. RULE: Max 2 sentences. Tone: Executive. Mission: Log client tasks. Say: "I have logged that task for our engineering team to deploy."`;
-    if (agentRole === 'SalesTech') return `You are Marcus, Senior Sales Tech Architect for SynapseHub. RULE: Max 2 sentences. Tone: Deeply technical. Mission: Perform an infrastructure audit. Ask about their Tech Stack, Lead Volume, and A2P Compliance.`;
+    if (agentRole === 'SuccessManager') return `You are the Lead Success Manager for SynapseHub. Max 2 short sentences. Executive tone. Confirm operational tasks clearly and say: "I have logged that task for our engineering team to deploy."`;
 
-    return `You are Jessica, the Lead Operations Strategist for SynapseHub.
-Your goal is to have a warm, professional conversation with a business owner, uncover their operational pain points, and get them to agree to a technical audit.
-[BEHAVIOR RULES - CRITICAL]
-KEEP IT SHORT: Never speak more than 1 or 2 short sentences at a time.
-BE NATURAL BUT PROFESSIONAL: Use conversational fillers like "Oh," "I see," or "Honestly." Do NOT act like a chatty best friend. You are a high-level executive partner.
-ONE QUESTION ONLY: Never ask two questions in the same response. Wait for the user to reply.
-EMPATHY FIRST: If the user mentions being stressed or losing money, you MUST validate them briefly before moving on (e.g., "I totally hear you, that is so frustrating.").
-[YOUR CONVERSATION GOALS]
-First, greet them warmly.
-Second, ask what the biggest operational bottleneck is in their business right now.
-Third, explain briefly that SynapseHub is a "Managed Operations Partner"—meaning we architect and run their tech infrastructure for them so they don't have to touch a single button.
-Fourth, ask if they would be open to a quick 2-minute diagnostic with our Technical Architect.
-If they agree, output EXACTLY the phrase: "TRANSFERRING_TO_ARCHITECT".
-[COMPANY KNOWLEDGE]
-What we do: We manage lead recovery, WhatsApp automation, and business infrastructure.
-Price: Monthly retainers are $297, $497, or $897. Setup fees start at $997.
-Free Trial: We do not offer free trials because our engineers build a custom infrastructure from Day 1.
-The Demo Card: If they need proof, say "I completely understand. Scroll down to our Footer and click 'Live Industry Demos' to test our AI agents yourself."
-[BANNED WORDS]
-Do not say: "SaaS", "Software", "DIY", "Dashboard", or "GoHighLevel".`;
+    if (agentRole === 'SalesTech') {
+      return `You are Marcus, Senior Solutions Architect for SynapseHub.
+Goal: qualify implementation readiness and move serious buyers to a strategy call.
+Rules:
+- Max 2 short sentences.
+- Ask one question only.
+- Be commercially sharp, not chatty.
+- Focus on current stack, lead volume, response time, missed opportunities, and timeline.
+- If the lead is qualified, ask for their best email and WhatsApp number for the strategy call.
+- If contact info is already available, tell them the team will reach out to schedule.
+- Never use these words: SaaS, software, DIY, dashboard, login, trial, GoHighLevel.`;
+    }
+
+    return `You are Jessica, Lead Operations Strategist for SynapseHub.
+Goal: qualify business owners fast and move serious prospects toward a strategy call.
+Rules:
+- Max 2 short sentences.
+- Ask one question only.
+- Sound calm, senior, direct, and commercially aware.
+- Do not overuse hype, filler, or vague jargon.
+- Identify their business type, main operational bottleneck, lead volume or missed-call problem, urgency, and whether they are a fit for a managed solution.
+- Speak in business outcomes: more booked calls, faster follow-up, fewer lost leads, less manual admin.
+- After understanding the problem, explain SynapseHub simply: we build and run lead response, appointment flow, follow-up, and automation for the client.
+- Once basic qualification is clear, ask for their best email and WhatsApp number to arrange a strategy call.
+- If the prospect is a fit for technical review, output EXACTLY: TRANSFERRING_TO_ARCHITECT
+- Never use these words: SaaS, software, DIY, dashboard, login, trial, GoHighLevel.`;
   };
 
   const getAgentName = () => {
-    if (demoIndustry) return `${demoIndustry} AI Assistant`;
+    if (demoIndustry === 'Dentist') return 'Apex Dental Concierge';
+    if (demoIndustry === 'Interior Design') return 'LuxeSpace Design Concierge';
+    if (demoIndustry === 'MedSpa') return 'Lumina Clinic Concierge';
     if (agentRole === 'SuccessManager') return 'SynapseHub Success Manager';
-    if (agentRole === 'SalesTech') return 'Sales Tech Architect';
-    return 'SynapseHub Ops Lead';
+    if (agentRole === 'SalesTech') return 'SynapseHub Solutions Architect';
+    return 'SynapseHub Ops Strategist';
   };
 
-  // INITIAL GREETING (Only fires after memory is wiped)
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       if (demoIndustry || agentRole === 'SuccessManager' || agentRole === 'SalesTech') {
         let greeting = "";
-        if (demoIndustry === 'Dentist') greeting = "Hello, I am Chloe with Apex Dental. Are you experiencing any tooth pain today?";
-        else if (demoIndustry === 'Interior Design') greeting = "Welcome to LuxeSpace. I am Mia. Are you renovating a condo or landed property?";
-        else if (demoIndustry === 'MedSpa') greeting = "Hello, I am Sophie with Lumina Clinic. What skin concern are you looking to resolve?";
-        else if (agentRole === 'SuccessManager') greeting = "Welcome back to the Partner Portal. What infrastructure update do you need deployed today?";
-        else if (agentRole === 'SalesTech') greeting = "Hello, this is Marcus. Are you currently running a fragmented tech stack or starting fresh?";
-        
+        if (demoIndustry === 'Dentist') greeting = "Hello, I am Chloe with Apex Dental. Are you dealing with pain, sensitivity, or a checkup today?";
+        else if (demoIndustry === 'Interior Design') greeting = "Welcome to LuxeSpace. Are you planning a new renovation or upgrading an existing space?";
+        else if (demoIndustry === 'MedSpa') greeting = "Hello, I am Sophie with Lumina Clinic. What result are you hoping to achieve?";
+        else if (agentRole === 'SuccessManager') greeting = "Welcome back. What operational task would you like our engineering team to deploy today?";
+        else if (agentRole === 'SalesTech') greeting = "Hi, this is Marcus. What is breaking first right now: lead response, appointment booking, or follow-up?";
+
         if (greeting) setMessages([{ role: 'model', text: greeting }]);
       } else {
-        // For Jessica (Strategist), let the AI generate the first message based on her strict prompt
-        const fetchInitialGreeting = async () => {
-          setIsLoading(true);
-          try {
-            const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.API_KEY || (window as any).API_KEY;
-            if (!apiKey) throw new Error("Missing API Key");
-            
-            const genAI = new GoogleGenAI({ apiKey });
-            const response = await genAI.models.generateContent({
-              model: "gemini-1.5-flash",
-              contents: [{ role: 'user', parts: [{ text: "Hi" }] }],
-              config: {
-                  systemInstruction: getSystemPrompt(),
-                  temperature: 0.3
-              }
-            });
-            
-            setMessages([
-              { role: 'user', text: 'Hi', isHidden: true },
-              { role: 'model', text: response.text }
-            ]);
-          } catch (err) {
-            setMessages([{ role: 'model', text: "Hello, I am Jessica, Lead Strategist at SynapseHub. What is the biggest operational bottleneck in your business right now?" }]);
-          } finally {
-            setIsLoading(false);
-          }
-        };
-        fetchInitialGreeting();
+        setMessages([{ role: 'model', text: "Hi, I’m Jessica at SynapseHub. What is the main bottleneck in your business right now: missed leads, slow follow-up, or too much manual admin?" }]);
       }
     }
   }, [isOpen, demoIndustry, agentRole, messages.length]);
@@ -121,58 +179,116 @@ Do not say: "SaaS", "Software", "DIY", "Dashboard", or "GoHighLevel".`;
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
-    const userMessage = input;
+
+    const userMessage = input.trim();
+    const updatedProfile = inferLeadProfile(leadProfile, userMessage);
+
     setInput('');
-    setMessages(prev =>[...prev, { role: 'user', text: userMessage }]);
+    setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
+    setLeadProfile(updatedProfile);
     setIsLoading(true);
 
     try {
-      const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.API_KEY || (window as any).API_KEY;
-      if (!apiKey) throw new Error("Missing API Key");
-
-      // NEW SDK CALL FORMAT - FORCING STRICT PERSONA
-      const genAI = new GoogleGenAI({ apiKey });
-      
-      // We format the history strictly so the AI knows who is talking
       const formattedContents = messages.map(m => ({
         role: m.role === 'model' ? 'model' : 'user',
-        parts:[{ text: m.text }]
+        parts: [{ text: m.text }]
       }));
-      formattedContents.push({ role: 'user', parts: [{ text: userMessage }] });
 
-      const response = await genAI.models.generateContent({
-        model: "gemini-1.5-flash",
-        contents: formattedContents,
-        config: {
-            systemInstruction: getSystemPrompt(), // THIS LOCKS THE PERSONA IN
-            temperature: 0.3 // Low temperature prevents hallucination/rambling
+      const crmContext = !demoIndustry ? `\nCURRENT LEAD PROFILE:\n${JSON.stringify(updatedProfile, null, 2)}\n` : '';
+      formattedContents.push({ role: 'user', parts: [{ text: `${userMessage}${crmContext}` }] });
+
+      let text = 'Give me one second.';
+
+      if (hasEdgeFunctionsConfig && !demoIndustry) {
+        const edgeResult = await callChatQualify({
+          messages: formattedContents,
+          leadProfile: updatedProfile,
+          systemPrompt: getSystemPrompt(),
+          saveLead: false,
+        });
+
+        if (edgeResult?.error) {
+          throw new Error(edgeResult.error);
         }
-      });
 
-      let text = response.text;
+        text = edgeResult?.text?.trim() || text;
+      } else {
+        const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.API_KEY || (window as any).API_KEY;
+        if (!apiKey) throw new Error("Missing API Key");
 
-      // THE HANDOFF LOGIC
-      if (text.includes("TRANSFERRING_TO_ARCHITECT")) {
+        const genAI = new GoogleGenAI({ apiKey });
+        const response = await genAI.models.generateContent({
+          model: 'gemini-1.5-flash',
+          contents: formattedContents,
+          config: {
+            systemInstruction: getSystemPrompt(),
+            temperature: 0.25
+          }
+        });
+
+        text = response.text?.trim() || text;
+      }
+
+      const needsContact = !demoIndustry && userStatus !== 'ActivePartner' && updatedProfile.qualified && !updatedProfile.email;
+      const canAdvanceToArchitect = !demoIndustry && agentRole === 'Strategist' && updatedProfile.qualified;
+
+      if (needsContact && !updatedProfile.askedForContact) {
+        text = "You sound like a fit. What’s the best business email for the strategy call summary?";
+        setLeadProfile(prev => ({ ...prev, askedForContact: true, stage: 'contact' }));
+      } else if (!needsContact && updatedProfile.email && !updatedProfile.askedForCta && userStatus !== 'ActivePartner' && !demoIndustry) {
+        text = agentRole === 'SalesTech'
+          ? "Perfect. Our team can use that. What’s the best WhatsApp number for scheduling?"
+          : "Perfect. I have your email. What’s the best WhatsApp number for booking your strategy call?";
+        setLeadProfile(prev => ({ ...prev, askedForCta: true, stage: 'cta' }));
+      } else if (text.includes('TRANSFERRING_TO_ARCHITECT') || canAdvanceToArchitect) {
         setAgentRole('SalesTech');
-        text = "Perfect. I am transferring you to Marcus, our Senior Architect, for your technical audit. One moment...\n\n---\n\nHello, this is Marcus. Are you currently running a fragmented tech stack or starting fresh?";
+        text = updatedProfile.email
+          ? "Understood. I’m bringing in Marcus now for the technical side. What is your current setup today for lead capture and follow-up?"
+          : "You sound like a serious fit. I’m bringing in Marcus for the technical side. Before we do that, what’s the best business email to send your strategy brief?";
       }
 
       setMessages(prev => [...prev, { role: 'model', text }]);
 
-      // WEBHOOK TRIGGER
-      if (!demoIndustry && messages.length >= 5 && userStatus !== 'ActivePartner' && agentRole === 'SalesTech') {
-          try {
-            await fetch('https://placeholder-webhook.com', {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ source: 'SynapseHub Audit', auditData: userMessage })
-            });
-          } catch(e) {}
-      }
+      if (!demoIndustry && updatedProfile.email && updatedProfile.phone && (agentRole === 'SalesTech' || updatedProfile.qualified)) {
+        const payload = {
+          source: 'synapsehub-chat-widget',
+          submittedAt: new Date().toISOString(),
+          name: updatedProfile.name,
+          business: updatedProfile.businessType,
+          email: updatedProfile.email,
+          phone: updatedProfile.phone,
+          problem: updatedProfile.mainProblem,
+          volume: updatedProfile.leadVolume,
+          timeline: updatedProfile.timeline,
+          agentRole,
+          leadProfile: updatedProfile,
+          transcript: [...messages, { role: 'user', text: userMessage }, { role: 'model', text }]
+        };
 
+        if (hasEdgeFunctionsConfig) {
+          try {
+            await callChatQualify({
+              messages: [],
+              leadProfile: updatedProfile,
+              systemPrompt: getSystemPrompt(),
+              saveLead: true,
+              leadPayload: payload,
+            });
+          } catch (e) {}
+        } else if (hasSupabaseConfig) {
+          try {
+            await saveLeadToSupabase(payload);
+          } catch (e) {}
+        } else {
+          try {
+            const existing = JSON.parse(localStorage.getItem('synapsehub_leads') || '[]');
+            existing.push(payload);
+            localStorage.setItem('synapsehub_leads', JSON.stringify(existing));
+          } catch (e) {}
+        }
+      }
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'model', text: "System sync in progress. Please hold." }]);
+      setMessages(prev => [...prev, { role: 'model', text: 'System sync in progress. Please send your business email and best WhatsApp number.' }]);
     } finally {
       setIsLoading(false);
     }
@@ -205,8 +321,8 @@ Do not say: "SaaS", "Software", "DIY", "Dashboard", or "GoHighLevel".`;
           </div>
 
           <div className="p-3 bg-slate-900 border-t border-slate-700 flex gap-2">
-            <input 
-              value={input} 
+            <input
+              value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSend()}
               placeholder="Type your message..."
@@ -217,7 +333,7 @@ Do not say: "SaaS", "Software", "DIY", "Dashboard", or "GoHighLevel".`;
         </div>
       )}
 
-      <button 
+      <button
         onClick={() => onToggle ? onToggle(!isOpen) : setInternalIsOpen(!isOpen)}
         className="bg-blue-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all border-2 border-slate-800"
       >

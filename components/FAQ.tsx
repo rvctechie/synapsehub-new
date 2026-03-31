@@ -3,28 +3,28 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const faqs = [
   {
-    question: "What is SynapseHub?",
-    answer: "SynapseHub is a Managed Operations Service (MOS) that handles the technical heavy lifting of your marketing and sales infrastructure. We don't just give you technical systems; our team builds, manages, and optimizes your entire growth engine for you."
+    question: 'What does SynapseHub actually do?',
+    answer: 'SynapseHub helps service businesses respond to leads faster, recover missed opportunities, automate booking flow, and reduce manual admin. We handle the setup and operational work instead of leaving you to patch it together yourself.'
   },
   {
-    question: "How is this different from a standard CRM?",
-    answer: "Standard CRMs are 'Do-It-Yourself' systems. SynapseHub is 'Done-For-You.' We architect your pipelines, build your funnels, and manage your AI agents. You focus on closing deals while we handle the operational complexity."
+    question: 'Who is this best for?',
+    answer: 'It is best for service businesses that already have leads coming in but are losing revenue through missed calls, slow reply times, inconsistent follow-up, or messy internal workflow.'
   },
   {
-    question: "Is there a setup fee?",
-    answer: "Yes. Each tier includes a one-time Implementation & Onboarding Fee. This covers the custom architecture of your systems, data migration, and the strategic setup of your managed workflows to ensure immediate ROI."
+    question: 'Why is there a setup fee?',
+    answer: 'The setup fee covers implementation work: system setup, workflow design, integrations, configuration, and rollout. The more complex your business is, the more setup work is required up front.'
   },
   {
-    question: "Who manages the AI and automations?",
-    answer: "Our in-house technical team handles everything. We train your AI support agents, monitor your automation performance, and make strategic adjustments to your workflows as your business scales."
+    question: 'Do you manage the AI and automation for us?',
+    answer: 'Yes. SynapseHub is a managed service. We set up and maintain the lead response, appointment, follow-up, and automation layer so you are not left handling every moving part yourself.'
   },
   {
-    question: "Can I still access the infrastructure myself?",
-    answer: "Absolutely. You have full access to your Real-Time Operations Portal to monitor leads, view analytics, and communicate with clients. We manage the 'back-end' so your 'front-end' experience is seamless."
+    question: 'Can we still see what is happening?',
+    answer: 'Yes. You should still have visibility into leads, appointments, and reporting. The difference is that SynapseHub handles the operational setup and maintenance behind the scenes.'
   },
   {
-    question: "What kind of support is included?",
-    answer: "We provide proactive management rather than just reactive support. Depending on your tier, you'll have access to our strategic oversight team, priority technical assistance, and regular performance optimization calls."
+    question: 'What happens after I qualify on the site?',
+    answer: 'If the business looks like a fit, the next step is a strategy call or technical review. That is where SynapseHub confirms the leak, recommends the right starting tier, and outlines implementation.'
   }
 ];
 
@@ -36,7 +36,7 @@ export default function FAQ() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
-          <p className="text-slate-400">Everything you need to know about SynapseHub.</p>
+          <p className="text-slate-400">The basics, in plain English.</p>
         </div>
 
         <div className="space-y-4">

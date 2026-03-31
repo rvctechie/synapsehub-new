@@ -39,7 +39,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               <span className="text-xl font-bold text-white tracking-tight">Synapse<span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Hub</span></span>
             </div>
             <p className="text-sm leading-relaxed mb-4 text-slate-500">
-              The Managed Operations Service for high-growth companies. Scale your business without the technical heavy lifting.
+              Lead intake, follow-up, and booking systems for service businesses that need a cleaner path from inquiry to client.
             </p>
             <div className="flex gap-4">
               <button className="hover:text-blue-400 transition-colors"><Twitter className="w-5 h-5" /></button>
@@ -52,20 +52,20 @@ export default function Footer({ onNavigate }: FooterProps) {
           <div>
             <h4 className="text-white font-bold mb-4">Service</h4>
             <ul className="space-y-2 text-sm">
-              <li><button onClick={() => onNavigate('features')} className="hover:text-blue-400 transition-colors text-left w-full">Managed Solutions</button></li>
-              <li><button onClick={() => onNavigate('pricing')} className="hover:text-blue-400 transition-colors text-left w-full">Partnerships</button></li>
-              <li><button onClick={() => onNavigate('integrations')} className="hover:text-blue-400 transition-colors text-left w-full">Managed Integrations</button></li>
-              <li><button onClick={() => onNavigate('roadmap')} className="hover:text-blue-400 transition-colors text-left w-full">Strategic Growth Roadmap</button></li>
-              <li><button onClick={() => onNavigate('demo')} className="hover:text-blue-400 transition-colors text-left w-full">Live Industry Demos</button></li>
+              <li><button onClick={() => onNavigate('features')} className="hover:text-blue-400 transition-colors text-left w-full">How it works</button></li>
+              <li><button onClick={() => onNavigate('pricing')} className="hover:text-blue-400 transition-colors text-left w-full">Pricing</button></li>
+              <li><button onClick={() => onNavigate('integrations')} className="hover:text-blue-400 transition-colors text-left w-full">Integrations</button></li>
+              <li><button onClick={() => onNavigate('roadmap')} className="hover:text-blue-400 transition-colors text-left w-full">Roadmap</button></li>
+              <li><button onClick={() => onNavigate('demo')} className="hover:text-blue-400 transition-colors text-left w-full">Industry examples</button></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-white font-bold mb-4">Resources</h4>
             <ul className="space-y-2 text-sm">
-              <li><button onClick={() => onNavigate('support')} className="hover:text-blue-400 transition-colors text-left w-full">Concierge Support</button></li>
-              <li><button onClick={() => onNavigate('success')} className="hover:text-blue-400 transition-colors text-left w-full">Client Success Hub</button></li>
-              <li><button onClick={() => onNavigate('status')} className="hover:text-blue-400 transition-colors text-left w-full">System Health</button></li>
+              <li><button onClick={() => onNavigate('support')} className="hover:text-blue-400 transition-colors text-left w-full">Support</button></li>
+              <li><button onClick={() => onNavigate('success')} className="hover:text-blue-400 transition-colors text-left w-full">Client hub</button></li>
+              <li><button onClick={() => onNavigate('status')} className="hover:text-blue-400 transition-colors text-left w-full">Service status</button></li>
             </ul>
           </div>
 
@@ -81,7 +81,7 @@ export default function Footer({ onNavigate }: FooterProps) {
         </div>
         
         <div className="border-t border-slate-900 pt-8 text-sm text-center text-slate-600">
-          &copy; {new Date().getFullYear()} SynapseHub Inc. All rights reserved.
+          &copy; {new Date().getFullYear()} SynapseHub. All rights reserved.
         </div>
       </div>
     </footer>

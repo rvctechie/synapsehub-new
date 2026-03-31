@@ -16,9 +16,9 @@ export default function AiFeatureDemo() {
     setGeneratedAd('');
 
     try {
-      const apiKey = process.env.API_KEY || '';
+      const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.API_KEY || '';
       if (!apiKey) {
-        setGeneratedAd("API Key is missing. This is a demo mode. \n\nNormally, our AI would generate a high-converting ad for a " + businessType + " here, focused on benefits and strong CTAs.");
+        setGeneratedAd("Demo mode: a live key is not connected here yet. Normally this preview would generate campaign copy for a " + businessType + " based on the offer and buying intent.");
         setIsLoading(false);
         return;
       }
@@ -28,15 +28,15 @@ export default function AiFeatureDemo() {
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: `Write a short, punchy, high-converting Facebook ad copy for a ${businessType}. 
-        Include a headline, main text (focus on pain points and solution), and a call to action. 
-        Keep it under 150 words. Use emojis sparsely but effectively.`,
+        Include a headline, main text focused on pain points and solution, and a call to action. 
+        Keep it under 150 words. Use emojis sparingly.`,
       });
 
-      setGeneratedAd(response.text || "No response generated.");
+      setGeneratedAd(response.text || 'No response generated.');
 
     } catch (error) {
       console.error(error);
-      setGeneratedAd("Error generating content. Please try again later.");
+      setGeneratedAd('Error generating content. Please try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -57,25 +57,23 @@ export default function AiFeatureDemo() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
-          {/* Left Side: Copy */}
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-900/30 border border-purple-500/30 text-purple-400 text-sm font-semibold mb-6">
-              <Sparkles className="w-4 h-4" /> AI Automation
+              <Sparkles className="w-4 h-4" /> Campaign preview
             </div>
             <h2 className="text-4xl font-bold text-white mb-6">
-              Managed High-Converting Content Generation
+              Preview the kind of messaging support SynapseHub can operationalize
             </h2>
             <p className="text-lg text-slate-400 mb-8 leading-relaxed">
-              Stop worrying about copy. Our team manages your "Content AI" infrastructure, training models specifically for your niche to generate email sequences, ad copy, and social posts that actually convert.
+              This preview shows how messaging can be shaped around offer clarity, pain points, and conversion intent. In a full engagement, this would be tailored to your brand voice and buyer journey.
             </p>
             
             <ul className="space-y-4 mb-8">
               {[
-                "Managed content strategy for any industry",
-                "Managed SEO-optimized website copy",
-                "Managed personalized cold outreach emails",
-                "Managed social media caption systems"
+                'Campaign messaging shaped around buyer intent',
+                'Offer positioning that is easier to understand',
+                'Copy support for outreach, ads, and follow-up',
+                'A clearer bridge between lead capture and conversion'
               ].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-slate-300 font-medium">
                   <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 flex-shrink-0 border border-green-500/20">
@@ -87,18 +85,17 @@ export default function AiFeatureDemo() {
             </ul>
           </div>
 
-          {/* Right Side: Interactive Card */}
           <div className="bg-slate-900 p-8 rounded-2xl shadow-2xl border border-slate-800 relative">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              Managed Infrastructure Preview <span className="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-2 py-0.5 rounded">LIVE OPS</span>
+              Messaging preview <span className="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-2 py-0.5 rounded">LIVE</span>
             </h3>
             <p className="text-sm text-slate-400 mb-6">
-              This interactive preview demonstrates our automated content engine. In a full partnership, our team manages the training and deployment of these models specifically for your brand's voice and operational goals.
+              Try a niche below to preview how campaign copy can be structured around clarity and response, not fluff.
             </p>
             
             <form onSubmit={handleGenerate} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-1">Business Niche</label>
+                <label className="block text-sm font-medium text-slate-400 mb-1">Business niche</label>
                 <input 
                   type="text" 
                   value={businessType}
@@ -113,7 +110,7 @@ export default function AiFeatureDemo() {
                 disabled={isLoading}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-500 hover:to-purple-500 transition-all flex items-center justify-center gap-2 disabled:opacity-70 shadow-lg shadow-purple-900/20"
               >
-                {isLoading ? <><Loader2 className="w-5 h-5 animate-spin" /> Generating...</> : <><Sparkles className="w-5 h-5" /> Generate Ad Copy</>}
+                {isLoading ? <><Loader2 className="w-5 h-5 animate-spin" /> Generating...</> : <><Sparkles className="w-5 h-5" /> Generate preview</>}
               </button>
             </form>
 
@@ -133,7 +130,7 @@ export default function AiFeatureDemo() {
             
             {!generatedAd && !isLoading && (
               <div className="mt-6 bg-slate-950 border border-dashed border-slate-800 rounded-lg h-32 flex items-center justify-center text-slate-600 text-sm">
-                Enter a niche above to see the magic.
+                Enter a niche above to preview the output.
               </div>
             )}
           </div>
