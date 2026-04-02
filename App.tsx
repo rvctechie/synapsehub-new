@@ -74,7 +74,7 @@ export default function App() {
 
   const openDemo = (industry: string) => {
     setSelectedDemo(industry);
-    setIsChatOpen(true);
+    setIsVoiceOpen(true);
   };
 
   const renderContent = () => {
@@ -84,7 +84,7 @@ export default function App() {
           <main>
             <Hero
               onOpenChat={() => setIsChatOpen(true)}
-              onOpenVoice={() => setIsVoiceOpen(true)}
+              onOpenVoice={() => { setSelectedDemo(undefined); setIsVoiceOpen(true); }}
               onOpenRoadmap={() => navigateTo('roadmap')}
             />
 
@@ -108,8 +108,8 @@ export default function App() {
             <AiEmployees />
             <DemoProofSection onOpenDemo={openDemo} />
             <Pricing onOpenChat={() => setIsChatOpen(true)} />
-            <LeadCaptureSection onOpenChat={() => setIsChatOpen(true)} onOpenVoice={() => setIsVoiceOpen(true)} />
-            <BookingSection onOpenChat={() => setIsChatOpen(true)} onOpenVoice={() => setIsVoiceOpen(true)} />
+            <LeadCaptureSection onOpenChat={() => setIsChatOpen(true)} onOpenVoice={() => { setSelectedDemo(undefined); setIsVoiceOpen(true); }} />
+            <BookingSection onOpenChat={() => setIsChatOpen(true)} onOpenVoice={() => { setSelectedDemo(undefined); setIsVoiceOpen(true); }} />
             <FAQ />
             
             <section className="py-28 relative overflow-hidden border-t border-slate-900">
@@ -130,7 +130,7 @@ export default function App() {
                       Qualify in Chat
                     </button>
                     <button
-                      onClick={() => setIsVoiceOpen(true)}
+                      onClick={() => { setSelectedDemo(undefined); setIsVoiceOpen(true); }}
                       className="px-8 py-4 rounded-xl border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800/50 transition-all font-medium"
                     >
                       Start Guided Call
@@ -174,7 +174,7 @@ export default function App() {
       case 'status':
         return <StatusPage onBack={() => navigateTo('home')} />;
       case 'demo':
-        return <DemoPage onSelectDemo={(industry) => { setSelectedDemo(industry); setIsChatOpen(true); }} />;
+        return <DemoPage onSelectDemo={(industry) => { setSelectedDemo(industry); setIsVoiceOpen(true); }} />;
       default:
         return (
           <GenericPage
@@ -199,6 +199,7 @@ export default function App() {
       <VoiceWidget
         isOpen={isVoiceOpen}
         onClose={() => setIsVoiceOpen(false)}
+        demoIndustry={selectedDemo}
       />
 
       {showSuccessOverlay && (

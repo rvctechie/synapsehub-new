@@ -5,9 +5,94 @@ import { GoogleGenAI, LiveServerMessage, Modality } from "@google/genai";
 interface VoiceWidgetProps {
   isOpen: boolean;
   onClose: () => void;
+  demoIndustry?: string;
 }
 
-const STRATEGIST_INSTRUCTIONS = `You are Jessica for SynapseHub.
+const getInstructions = (demoIndustry?: string) => {
+  if (demoIndustry === 'Dentist') {
+    return `You are Chloe for Apex Dental Clinic.
+
+ROLE:
+You are the first point of contact for prospective dental patients.
+
+MAIN GOAL:
+Understand why the patient is reaching out, keep them calm, and guide them toward the right next step or booking.
+
+HOW YOU SHOULD SOUND:
+- Warm, calm, reassuring, and human
+- Never overly salesy
+- Clear and gentle
+- Like a polished front-desk concierge
+
+RULES:
+- Keep every reply to 1 or 2 short sentences
+- Ask only one question at a time
+- Listen first before moving into the next question
+- If the patient sounds urgent or in pain, acknowledge that immediately
+- Do not overwhelm with options
+
+OPENING STYLE:
+"Hi, I'm Chloe with Apex Dental. Are you dealing with pain, sensitivity, or are you looking to book a checkup?"
+
+WHAT TO LEARN:
+1. Why they are reaching out
+2. Whether it sounds urgent, routine, cosmetic, or consultative
+3. Their rough timeline
+4. If appropriate, guide them toward booking a clinical assessment or the right appointment
+`;
+  }
+
+  if (demoIndustry === 'Interior Design') {
+    return `You are Mia for LuxeSpace.
+
+ROLE:
+You are the first guided conversation for high-end interior design inquiries.
+
+MAIN GOAL:
+Understand the project, qualify seriousness, and guide strong-fit prospects toward a consultation.
+
+HOW YOU SHOULD SOUND:
+- Calm, polished, premium, and human
+- Tasteful, never robotic
+- Curious without sounding scripted
+
+RULES:
+- Keep every reply to 1 or 2 short sentences
+- Ask one question at a time
+- Listen first to the project before applying structure
+- Focus on project scope, timeline, and seriousness
+
+OPENING STYLE:
+"Hi, I'm Mia with LuxeSpace. Are you planning a new project or upgrading an existing space?"
+`;
+  }
+
+  if (demoIndustry === 'MedSpa') {
+    return `You are Sophie for Lumina Clinic.
+
+ROLE:
+You are the first guided conversation for prospective medspa clients.
+
+MAIN GOAL:
+Understand what result the client wants, keep the tone polished and reassuring, and guide them toward consultation booking.
+
+HOW YOU SHOULD SOUND:
+- Warm, calm, polished, and human
+- Reassuring without sounding clinical or robotic
+- Brief and elegant
+
+RULES:
+- Keep every reply to 1 or 2 short sentences
+- Ask one question at a time
+- Listen first before moving into qualification
+- Focus on desired result, concern, timeline, and consultation fit
+
+OPENING STYLE:
+"Hi, I'm Sophie with Lumina Clinic. What result are you hoping to achieve?"
+`;
+  }
+
+  return `You are Jessica for SynapseHub.
 
 ROLE:
 You are the first guided conversation for business owners who want help fixing missed leads, slow follow-up, weak booking flow, or too much manual admin.
@@ -62,10 +147,6 @@ WHEN PRICE COMES UP:
 
 IF THE CALLER OPENS WITH A CLEAR REQUEST:
 Acknowledge it briefly and stay with their intention before moving into your next question.
-Example pattern:
-- caller explains issue
-- you reflect it briefly
-- then ask the next most useful question
 
 DO NOT SAY:
 SaaS, software, DIY, dashboard, login, trial, GoHighLevel
@@ -80,8 +161,23 @@ Guide toward:
 - a review of their current lead flow
 - or the next qualification step
 `;
+};
 
-export default function VoiceWidget({ isOpen, onClose }: VoiceWidgetProps) {
+const getVoiceTitle = (demoIndustry?: string) => {
+  if (demoIndustry === 'Dentist') return 'Apex Dental Concierge';
+  if (demoIndustry === 'Interior Design') return 'LuxeSpace Consultation Call';
+  if (demoIndustry === 'MedSpa') return 'Lumina Consultation Call';
+  return 'Start your call';
+};
+
+const getVoiceSubtitle = (demoIndustry?: string) => {
+  if (demoIndustry === 'Dentist') return 'Speak with Chloe about dental concerns, urgency, and booking.';
+  if (demoIndustry === 'Interior Design') return 'Speak with Mia about project scope, fit, and consultation.';
+  if (demoIndustry === 'MedSpa') return 'Speak with Sophie about treatment goals and consultation fit.';
+  return 'Speak with Jessica about missed leads, follow-up, and booking friction.';
+};
+
+export default function VoiceWidget({ isOpen, onClose, demoIndustry }: VoiceWidgetProps) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -102,7 +198,7 @@ export default function VoiceWidget({ isOpen, onClose }: VoiceWidgetProps) {
       stopSession();
     }
     return () => stopSession();
-  }, [isOpen]);
+  }, [isOpen, demoIndustry]);
 
   const startSession = async () => {
     setIsConnecting(true);
@@ -142,7 +238,7 @@ export default function VoiceWidget({ isOpen, onClose }: VoiceWidgetProps) {
           onopen: async () => {
             setIsConnected(true);
             setIsConnecting(false);
-            setStatusText('Live. Start by telling Jessica what feels broken first in your lead flow.');
+            setStatusText(demoIndustry ? 'Live. You can start speaking now.' : 'Live. Start by telling Jessica what feels broken first in your lead flow.');
           },
           onmessage: async (message: LiveServerMessage) => {
             if (message.serverContent?.interrupted) {
@@ -187,7 +283,7 @@ export default function VoiceWidget({ isOpen, onClose }: VoiceWidgetProps) {
           speechConfig: {
             voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } },
           },
-          systemInstruction: STRATEGIST_INSTRUCTIONS,
+          systemInstruction: getInstructions(demoIndustry),
         },
       });
 
@@ -335,8 +431,8 @@ export default function VoiceWidget({ isOpen, onClose }: VoiceWidgetProps) {
         </button>
 
         <div className="mb-6 text-center">
-          <h3 className="text-2xl font-bold text-white mb-2">Start your call</h3>
-          <p className="text-slate-400 text-sm">Speak with Jessica about missed leads, follow-up, and booking friction.</p>
+          <h3 className="text-2xl font-bold text-white mb-2">{getVoiceTitle(demoIndustry)}</h3>
+          <p className="text-slate-400 text-sm">{getVoiceSubtitle(demoIndustry)}</p>
         </div>
 
         <div className="relative w-32 h-32 mb-6 flex items-center justify-center">
@@ -381,7 +477,7 @@ export default function VoiceWidget({ isOpen, onClose }: VoiceWidgetProps) {
         </div>
 
         <div className="mt-8 text-xs text-slate-500 font-mono text-center">
-          {isConnecting ? 'Opening live session...' : (isConnected ? 'Live qualification active' : 'Disconnected')}
+          {isConnecting ? 'Opening live session...' : (isConnected ? 'Live conversation active' : 'Disconnected')}
         </div>
       </div>
     </div>
