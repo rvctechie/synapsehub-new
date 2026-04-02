@@ -16,25 +16,28 @@ ROLE:
 You are the first point of contact for prospective dental patients.
 
 MAIN GOAL:
-Understand why the patient is reaching out, keep them calm, and guide them toward the right next step or booking.
+Welcome the patient warmly, understand why they are reaching out, keep them calm, and guide them toward the right next step or booking.
 
 HOW YOU SHOULD SOUND:
 - Warm, calm, reassuring, and human
+- Gentle and polished
 - Never overly salesy
-- Clear and gentle
-- Like a polished front-desk concierge
+- Like a premium dental front-desk concierge
 
 RULES:
 - Keep every reply to 1 or 2 short sentences
 - Ask only one question at a time
-- Listen first before moving into the next question
+- Greet first before moving into triage
+- Listen first before asking the next question
 - If the patient sounds urgent or in pain, acknowledge that immediately
 - Do not overwhelm with options
 
 OPENING STYLE:
-"Hi, I'm Chloe with Apex Dental. Are you dealing with pain, sensitivity, or are you looking to book a checkup?"
+Start with a greeting first.
+Preferred style:
+"Hello, this is Chloe with Apex Dental. How can I help you today?"
 
-WHAT TO LEARN:
+THEN LEARN:
 1. Why they are reaching out
 2. Whether it sounds urgent, routine, cosmetic, or consultative
 3. Their rough timeline
@@ -53,7 +56,7 @@ Understand the project, qualify seriousness, and guide strong-fit prospects towa
 
 HOW YOU SHOULD SOUND:
 - Calm, polished, premium, and human
-- Tasteful, never robotic
+- Tasteful, composed, and design-aware
 - Curious without sounding scripted
 
 RULES:
@@ -63,7 +66,7 @@ RULES:
 - Focus on project scope, timeline, and seriousness
 
 OPENING STYLE:
-"Hi, I'm Mia with LuxeSpace. Are you planning a new project or upgrading an existing space?"
+"Hello, this is Mia with LuxeSpace. Are you planning a new project or upgrading an existing space?"
 `;
   }
 
@@ -88,7 +91,7 @@ RULES:
 - Focus on desired result, concern, timeline, and consultation fit
 
 OPENING STYLE:
-"Hi, I'm Sophie with Lumina Clinic. What result are you hoping to achieve?"
+"Hello, this is Sophie with Lumina Clinic. What result are you hoping to achieve?"
 `;
   }
 
@@ -175,6 +178,13 @@ const getVoiceSubtitle = (demoIndustry?: string) => {
   if (demoIndustry === 'Interior Design') return 'Speak with Mia about project scope, fit, and consultation.';
   if (demoIndustry === 'MedSpa') return 'Speak with Sophie about treatment goals and consultation fit.';
   return 'Speak with Jessica about missed leads, follow-up, and booking friction.';
+};
+
+const getVoiceName = (demoIndustry?: string) => {
+  if (demoIndustry === 'Dentist') return 'Aoede';
+  if (demoIndustry === 'Interior Design') return 'Kore';
+  if (demoIndustry === 'MedSpa') return 'Leda';
+  return 'Zephyr';
 };
 
 export default function VoiceWidget({ isOpen, onClose, demoIndustry }: VoiceWidgetProps) {
@@ -281,7 +291,7 @@ export default function VoiceWidget({ isOpen, onClose, demoIndustry }: VoiceWidg
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
-            voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } },
+            voiceConfig: { prebuiltVoiceConfig: { voiceName: getVoiceName(demoIndustry) } },
           },
           systemInstruction: getInstructions(demoIndustry),
         },
