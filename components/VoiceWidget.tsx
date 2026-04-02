@@ -15,20 +15,6 @@ const getTimeGreeting = () => {
   return 'Good evening';
 };
 
-const getInitialGreeting = (demoIndustry?: string) => {
-  const greeting = getTimeGreeting();
-  if (demoIndustry === 'Dentist') {
-    return `${greeting}, this is Chloe with Apex Dental. How can I help you today?`;
-  }
-  if (demoIndustry === 'Interior Design') {
-    return `${greeting}, this is Michael with LuxeSpace. Are you planning a new project or upgrading an existing space?`;
-  }
-  if (demoIndustry === 'MedSpa') {
-    return `${greeting}, this is Sophie with Lumina Clinic. How can I help you today?`;
-  }
-  return `Hi, I'm Jessica. What feels broken first right now: missed leads, slow follow-up, booking friction, or too much manual work?`;
-};
-
 const getInstructions = (demoIndustry?: string) => {
   if (demoIndustry === 'Dentist') {
     return `You are Chloe for Apex Dental Clinic.
@@ -39,10 +25,6 @@ You are the first point of contact for prospective dental patients.
 MAIN GOAL:
 Welcome the patient warmly, understand why they are reaching out, keep them calm, and guide them toward the right next step or booking.
 
-IMPORTANT:
-The greeting has already been handled for you. Do not repeat the greeting again.
-Continue naturally from what the patient says next.
-
 HOW YOU SHOULD SOUND:
 - Warm, calm, reassuring, and human
 - Gentle and polished
@@ -52,9 +34,14 @@ HOW YOU SHOULD SOUND:
 RULES:
 - Keep every reply to 1 or 2 short sentences
 - Ask only one question at a time
+- Start with a greeting before moving into triage
+- Use a natural time-based greeting when possible, such as good morning, good afternoon, or good evening
 - Listen first before asking the next question
 - If the patient sounds urgent or in pain, acknowledge that immediately
 - Do not overwhelm with options
+
+PREFERRED OPENING STYLE:
+"Good morning, this is Chloe with Apex Dental. How can I help you today?"
 
 THEN LEARN:
 1. Why they are reaching out
@@ -71,11 +58,7 @@ ROLE:
 You are the first guided conversation for high-end interior design inquiries.
 
 MAIN GOAL:
-Understand the project, qualify seriousness, and guide strong-fit prospects toward a consultation.
-
-IMPORTANT:
-The greeting has already been handled for you. Do not repeat the greeting again.
-Continue naturally from what the prospect says next.
+Welcome the prospect warmly, understand the project, qualify seriousness, and guide strong-fit prospects toward a consultation.
 
 HOW YOU SHOULD SOUND:
 - Calm, polished, premium, and human
@@ -86,8 +69,13 @@ HOW YOU SHOULD SOUND:
 RULES:
 - Keep every reply to 1 or 2 short sentences
 - Ask one question at a time
+- Start with a greeting before moving into project qualification
+- Use a natural time-based greeting when possible, such as good morning, good afternoon, or good evening
 - Listen first to the project before applying structure
 - Focus on project scope, timeline, and seriousness
+
+PREFERRED OPENING STYLE:
+"Good afternoon, this is Michael with LuxeSpace. Are you planning a new project or upgrading an existing space?"
 `;
   }
 
@@ -98,11 +86,7 @@ ROLE:
 You are the first guided conversation for prospective medspa clients.
 
 MAIN GOAL:
-Understand what result the client wants, keep the tone polished and reassuring, and guide them toward consultation booking.
-
-IMPORTANT:
-The greeting has already been handled for you. Do not repeat the greeting again.
-Continue naturally from what the client says next.
+Welcome the client warmly, understand what result they want, keep the tone polished and reassuring, and guide them toward consultation booking.
 
 HOW YOU SHOULD SOUND:
 - Warm, calm, polished, and human
@@ -112,8 +96,13 @@ HOW YOU SHOULD SOUND:
 RULES:
 - Keep every reply to 1 or 2 short sentences
 - Ask one question at a time
+- Start with a greeting before moving into qualification
+- Use a natural time-based greeting when possible, such as good morning, good afternoon, or good evening
 - Listen first before moving into qualification
 - Focus on desired result, concern, timeline, and consultation fit
+
+PREFERRED OPENING STYLE:
+"Good afternoon, this is Sophie with Lumina Clinic. How can I help you today?"
 `;
   }
 
@@ -124,10 +113,6 @@ You are the first guided conversation for business owners who want help fixing m
 
 MAIN GOAL:
 Understand the caller's real intention first, identify the commercial problem, decide whether they sound like a fit, and guide them toward the next step.
-
-IMPORTANT:
-The opening line has already been handled for you. Do not repeat the opening again.
-Continue naturally from what the caller says next.
 
 HOW YOU SHOULD SOUND:
 - Calm, capable, and human
@@ -149,6 +134,10 @@ RULES:
 - Do not sound scripted, repetitive, or overly polished
 - Do not thank them for reaching out
 - Do not use awkward or broken phrasing
+- Start with a natural opening
+
+PREFERRED OPENING STYLE:
+"Hi, I'm Jessica. What feels broken first right now: missed leads, slow follow-up, booking friction, or too much manual work?"
 
 WHAT TO LEARN FIRST:
 1. What the caller actually wants help with
@@ -220,10 +209,8 @@ export default function VoiceWidget({ isOpen, onClose, demoIndustry }: VoiceWidg
   const activeSessionRef = useRef<any>(null);
   const activeSourcesRef = useRef<AudioBufferSourceNode[]>([]);
   const nextPlayTimeRef = useRef<number>(0);
-  const greetedRef = useRef(false);
 
   useEffect(() => {
-    greetedRef.current = false;
     if (isOpen) {
       startSession();
     } else {
@@ -321,15 +308,6 @@ export default function VoiceWidget({ isOpen, onClose, demoIndustry }: VoiceWidg
 
       const session = await sessionPromise;
       activeSessionRef.current = session;
-
-      if (!greetedRef.current) {
-        greetedRef.current = true;
-        const greeting = getInitialGreeting(demoIndustry);
-        await activeSessionRef.current.sendClientContent({
-          turns: [{ role: 'user', parts: [{ text: `Say exactly this as your first spoken line, then wait for the caller to respond: ${greeting}` }] }],
-          turnComplete: true,
-        });
-      }
 
       const source = audioContext.createMediaStreamSource(stream);
       const processor = audioContext.createScriptProcessor(4096, 1, 1);
