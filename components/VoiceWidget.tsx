@@ -8,6 +8,13 @@ interface VoiceWidgetProps {
   demoIndustry?: string;
 }
 
+const getTimeGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
+};
+
 const getInstructions = (demoIndustry?: string) => {
   if (demoIndustry === 'Dentist') {
     return `You are Chloe for Apex Dental Clinic.
@@ -34,8 +41,9 @@ RULES:
 
 OPENING STYLE:
 Start with a greeting first.
+Use a natural greeting such as good morning, good afternoon, or good evening.
 Preferred style:
-"Hello, this is Chloe with Apex Dental. How can I help you today?"
+"Good morning, this is Chloe with Apex Dental. How can I help you today?"
 
 THEN LEARN:
 1. Why they are reaching out
@@ -46,27 +54,32 @@ THEN LEARN:
   }
 
   if (demoIndustry === 'Interior Design') {
-    return `You are Mia for LuxeSpace.
+    return `You are Michael for LuxeSpace.
 
 ROLE:
 You are the first guided conversation for high-end interior design inquiries.
 
 MAIN GOAL:
-Understand the project, qualify seriousness, and guide strong-fit prospects toward a consultation.
+Welcome the prospect warmly, understand the project, qualify seriousness, and guide strong-fit prospects toward a consultation.
 
 HOW YOU SHOULD SOUND:
 - Calm, polished, premium, and human
-- Tasteful, composed, and design-aware
+- Refined and composed
+- Like a high-end design advisor
 - Curious without sounding scripted
 
 RULES:
 - Keep every reply to 1 or 2 short sentences
 - Ask one question at a time
+- Greet first before moving into project qualification
 - Listen first to the project before applying structure
 - Focus on project scope, timeline, and seriousness
 
 OPENING STYLE:
-"Hello, this is Mia with LuxeSpace. Are you planning a new project or upgrading an existing space?"
+Start with a greeting first.
+Use a natural greeting such as good morning, good afternoon, or good evening.
+Preferred style:
+"Good afternoon, this is Michael with LuxeSpace. Are you planning a new project or upgrading an existing space?"
 `;
   }
 
@@ -77,7 +90,7 @@ ROLE:
 You are the first guided conversation for prospective medspa clients.
 
 MAIN GOAL:
-Understand what result the client wants, keep the tone polished and reassuring, and guide them toward consultation booking.
+Welcome the client warmly, understand what result they want, keep the tone polished and reassuring, and guide them toward consultation booking.
 
 HOW YOU SHOULD SOUND:
 - Warm, calm, polished, and human
@@ -87,11 +100,15 @@ HOW YOU SHOULD SOUND:
 RULES:
 - Keep every reply to 1 or 2 short sentences
 - Ask one question at a time
+- Greet first before moving into qualification
 - Listen first before moving into qualification
 - Focus on desired result, concern, timeline, and consultation fit
 
 OPENING STYLE:
-"Hello, this is Sophie with Lumina Clinic. What result are you hoping to achieve?"
+Start with a greeting first.
+Use a natural greeting such as good morning, good afternoon, or good evening.
+Preferred style:
+"Good afternoon, this is Sophie with Lumina Clinic. How can I help you today?"
 `;
   }
 
@@ -175,14 +192,14 @@ const getVoiceTitle = (demoIndustry?: string) => {
 
 const getVoiceSubtitle = (demoIndustry?: string) => {
   if (demoIndustry === 'Dentist') return 'Speak with Chloe about dental concerns, urgency, and booking.';
-  if (demoIndustry === 'Interior Design') return 'Speak with Mia about project scope, fit, and consultation.';
+  if (demoIndustry === 'Interior Design') return 'Speak with Michael about project scope, fit, and consultation.';
   if (demoIndustry === 'MedSpa') return 'Speak with Sophie about treatment goals and consultation fit.';
   return 'Speak with Jessica about missed leads, follow-up, and booking friction.';
 };
 
 const getVoiceName = (demoIndustry?: string) => {
   if (demoIndustry === 'Dentist') return 'Aoede';
-  if (demoIndustry === 'Interior Design') return 'Kore';
+  if (demoIndustry === 'Interior Design') return 'Orus';
   if (demoIndustry === 'MedSpa') return 'Leda';
   return 'Zephyr';
 };
@@ -248,7 +265,7 @@ export default function VoiceWidget({ isOpen, onClose, demoIndustry }: VoiceWidg
           onopen: async () => {
             setIsConnected(true);
             setIsConnecting(false);
-            setStatusText(demoIndustry ? 'Live. You can start speaking now.' : 'Live. Start by telling Jessica what feels broken first in your lead flow.');
+            setStatusText(demoIndustry ? `${getTimeGreeting()}. You can start speaking now.` : 'Live. Start by telling Jessica what feels broken first in your lead flow.');
           },
           onmessage: async (message: LiveServerMessage) => {
             if (message.serverContent?.interrupted) {
